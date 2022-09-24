@@ -7,7 +7,7 @@ import { ITodo } from "./types";
 const App: Component = () => {
   const [todos, setTodos] = createSignal<Array<ITodo>>([]);
 
-  const [hideDone, setHideDone] = createSignal<boolean>(false);
+  const [showAll, setShowAll] = createSignal<boolean>(false);
 
   const handleSubmit = (value: string) => {
     const [done, setDone] = createSignal(false);
@@ -20,23 +20,17 @@ const App: Component = () => {
   };
 
   const onInput: JSX.EventHandler<HTMLInputElement, InputEvent> = (event) => {
-    setHideDone(event.currentTarget.checked);
+    setShowAll(event.currentTarget.checked);
   };
-
-  const filteredTodos = () =>
-    hideDone() ? [...todos()].filter((item) => !item.done()) : todos();
 
   return (
     <div class="mt-5 flex items-center h-screen flex-col">
       <div class="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <AddItemForm handleSubmit={handleSubmit} />
         <Show when={todos().length}>
-          <ShowInput
-            onInput={onInput}
-            filteredTodosLen={filteredTodos().length}
-          />
+          <ShowInput onInput={onInput} />
         </Show>
-        <List todos={filteredTodos()} onCheck={onCheck} />
+        <List todos={todos()} onCheck={onCheck} showAll={showAll} />
       </div>
     </div>
   );
