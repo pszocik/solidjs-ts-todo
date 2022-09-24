@@ -1,5 +1,6 @@
 import { Component } from "solid-js";
 import { ITodo } from "../types";
+import { Motion } from "@motionone/solid";
 
 interface Props {
   todo: ITodo;
@@ -7,15 +8,23 @@ interface Props {
 }
 
 const Item: Component<Props> = (props) => {
+  const todoStyle = () => ({
+    "text-decoration": props.todo.done() ? "line-through" : "none",
+  });
+
   return (
-    <div class="flex flex-row gap-2">
+    <Motion.div
+      initial={{ x: -500 }}
+      animate={{ x: 0 }}
+      class="flex flex-row gap-2"
+    >
       <input
         type="checkbox"
-        checked={props.todo.done}
+        checked={props.todo.done()}
         onChange={() => props.onCheck(props.todo.id)}
       />
-      <p>{props.todo.value}</p>
-    </div>
+      <p style={todoStyle()}>{props.todo.value}</p>
+    </Motion.div>
   );
 };
 
